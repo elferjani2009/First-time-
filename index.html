@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مصروفي</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f1f4f0;--card:#ffffff;--ink:#1b2a22;--mute:#5f7266;--line:#d8e0d9;--accent:#1f7a4d;--accent-ink:#ffffff;--warn:#c2410c;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1913;--card:#17261d;--ink:#e6f0e9;--mute:#9bb2a3;--line:#2a3f31;--accent:#4cc98a;--accent-ink:#06210f;--warn:#fb923c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1913;--card:#17261d;--ink:#e6f0e9;--mute:#9bb2a3;--line:#2a3f31;--accent:#4cc98a;--accent-ink:#06210f;--warn:#fb923c;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Cairo",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;line-height:1.7}
+main{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 14px}
+.head h1{margin:0}
+.head{flex-wrap:wrap}
+.hctl{display:flex;align-items:center;gap:6px}
+.head select{width:auto;padding:6px 8px;font-size:.85rem}
+#newP{padding:5px 10px;font-size:.85rem;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+h1{font-size:1.6rem;font-weight:800}
+h2{font-size:1.05rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.total{background:var(--accent);color:var(--accent-ink);border-radius:14px;padding:18px;margin-bottom:16px}
+.total .big{font-size:2.4rem;font-weight:800;line-height:1.2}
+.total small{opacity:.9}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.3);margin-top:10px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent-ink);opacity:.75}
+.seg{display:flex;gap:6px;margin-bottom:12px}
+.seg button{flex:1;font:inherit;font-size:.9rem;font-weight:600;border:1px solid rgba(255,255,255,.55);border-radius:8px;padding:5px 4px;background:transparent;color:var(--accent-ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-ink);color:var(--accent)}
+.seg button:focus-visible{outline-color:var(--accent-ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+label{display:block;font-size:.85rem;color:var(--mute);margin-bottom:2px}
+input,select{width:100%;font:inherit;font-size:1rem;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.add{font:inherit;font-weight:600;border:0;border-radius:10px;padding:11px;background:var(--accent);color:var(--accent-ink);cursor:pointer;width:100%}
+.prow{display:flex;gap:8px;margin-top:8px}
+.prow[hidden]{display:none}
+.prow select,.prow input{flex:1;min-width:0}
+.mini{font:inherit;font-size:.9rem;font-weight:600;border:0;border-radius:8px;padding:8px 12px;background:var(--accent);color:var(--accent-ink);cursor:pointer;white-space:nowrap}
+.mini.ghost{background:transparent;color:var(--mute);border:1px solid var(--line)}
+.cat{margin:8px 0}
+.cat .top{display:flex;justify-content:space-between;font-size:.92rem}
+.cat .track{height:7px;border-radius:4px;background:var(--line);margin-top:3px;overflow:hidden}
+.cat .track>i{display:block;height:100%;background:var(--accent)}
+.item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.item:last-child{border:0}
+.item .info{flex:1;min-width:0}
+.item .info div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .meta{font-size:.78rem;color:var(--mute)}
+.item .amt{font-weight:600}
+.del{border:0;background:transparent;color:var(--warn);font:inherit;cursor:pointer;padding:4px 8px;font-size:1.1rem}
+.empty{color:var(--mute);text-align:center;padding:10px 0}
+.linkbtn{border:0;background:transparent;color:var(--mute);font:inherit;font-size:.85rem;cursor:pointer;text-decoration:underline;padding:0}
+</style>
+</head>
+<body>
+<main>
+<div class="head">
+<h1 data-i="title">مصروفي</h1>
+<div class="hctl">
+<button class="mini" id="newP" type="button">إضافة حساب</button>
+<select id="lang" aria-label="Language">
+<option value="ar">العربية</option>
+<option value="en">English</option>
+<option value="fr">Français</option>
+</select>
+</div>
+</div>
+
+<div class="card" id="newRow" hidden>
+<select id="prof" aria-label="Account" style="margin-bottom:8px" hidden></select>
+<div class="prow" style="margin-top:0"><input id="pname" type="text" maxlength="30"><button class="mini" id="createP" type="button" data-i="create">إنشاء</button><button class="mini ghost" id="cancelP" type="button" data-i="cancel">إغلاق</button></div>
+<p style="margin:8px 0 0"><button class="linkbtn" id="delP" type="button" data-i="delP" hidden>حذف هذا الحساب</button></p>
+</div>
+
+<div class="total">
+<div class="seg" role="group"><button type="button" data-p="day" data-i="bDay" aria-pressed="false">اليوم</button><button type="button" data-p="week" data-i="bWeek" aria-pressed="false">الأسبوع</button><button type="button" data-p="month" data-i="bMonth" aria-pressed="true">الشهر</button></div>
+<small id="periodLbl">مصروف هذا الشهر</small>
+<div class="big" id="total" aria-live="polite">0</div>
+<small id="budgetTxt"></small>
+<div class="bar" id="barWrap" hidden><i id="bar"></i></div>
+</div>
+
+<div class="card">
+<h2 data-i="addH">أضف مصروفًا</h2>
+<div class="grid">
+<div><label for="amt" data-i="amount">المبلغ</label><input id="amt" type="number" inputmode="decimal" placeholder="0"></div>
+<div><label for="cat" data-i="category">الفئة</label><select id="cat"></select></div>
+<div class="full"><label for="note" data-i="note">ملاحظة (اختياري)</label><input id="note" type="text"></div>
+<div class="full"><button class="add" id="addBtn" type="button" data-i="add">أضف المصروف</button></div>
+</div>
+</div>
+
+<div class="card">
+<h2 id="budgetH">ميزانية الشهر</h2>
+<label for="budget" data-i="budgetL">الحد الأقصى الذي تريد الالتزام به</label>
+<input id="budget" type="number" inputmode="decimal">
+</div>
+
+<div class="card">
+<h2 data-i="byCat">حسب الفئة</h2>
+<div id="cats"></div>
+</div>
+
+<div class="card">
+<h2 data-i="recent">آخر المصاريف</h2>
+<div id="list"></div>
+</div>
+<p style="text-align:center"><button class="linkbtn" id="clear" type="button">مسح بيانات الشهر</button></p>
+</main>
+<script>
+(function(){
+var KEY="masrofi-v1",LKEY="masrofi-lang";
+var data=null;
+function newBud(){return {day:"",week:"",month:""}}
+function normItems(x){var o={day:[],week:[],month:[]};if(Array.isArray(x))o.month=x;else if(x){["day","week","month"].forEach(function(k){if(Array.isArray(x[k]))o[k]=x[k]})}return o}
+try{
+var s=JSON.parse(localStorage.getItem(KEY)||"null");
+if(s&&Array.isArray(s.profiles)&&s.profiles.length){data=s;data.profiles.forEach(function(p){if(!p.budgets)p.budgets=newBud();p.items=normItems(p.items)})}
+else if(s&&Array.isArray(s.items)){var b=newBud();b.month=s.budget||"";data={active:"p1",profiles:[{id:"p1",name:null,items:normItems(s.items),budgets:b}]}}
+}catch(e){}
+if(!data)data={active:"p1",profiles:[{id:"p1",name:null,items:normItems(),budgets:newBud()}]};
+if(!data.active)data.active=data.profiles[0].id;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
+function cp(){for(var i=0;i<data.profiles.length;i++)if(data.profiles[i].id===data.active)return data.profiles[i];data.active=data.profiles[0].id;return data.profiles[0]}
+var T={
+ar:{title:"مصروفي",month:"مصروف هذا الشهر",today:"مصروف اليوم",week:"مصروف هذا الأسبوع",bDay:"اليوم",bWeek:"الأسبوع",bMonth:"الشهر",addH:"أضف مصروفًا",amount:"المبلغ",category:"الفئة",note:"ملاحظة (اختياري)",notePh:"مثال: غداء",add:"أضف المصروف",budgetL:"الحد الأقصى الذي تريد الالتزام به",budgetPh:"اتركه فارغًا إن لم تحدد",hDay:"ميزانية اليوم",hWeek:"ميزانية الأسبوع",hMonth:"ميزانية الشهر",byCat:"حسب الفئة",recent:"آخر المصاريف",noData:"لا توجد بيانات بعد",first:"أضف أول مصروف لك",cDay:"مسح بيانات اليوم",cWeek:"مسح بيانات الأسبوع",cMonth:"مسح بيانات الشهر",confirm:"اضغط مرة أخرى للتأكيد",left:"المتبقي من ميزانيتك: ",over:"تجاوزت ميزانيتك بمقدار ",setB:"حدد ميزانية لتتابع المتبقي",del:"حذف",profile:"الحساب",newP:"إضافة حساب",namePh:"اسم الشخص (مثال: أحمد)",create:"إنشاء",cancel:"إغلاق",delP:"حذف هذا الحساب",me:"حسابي",
+cats:{food:"طعام",transport:"مواصلات",bills:"فواتير",shopping:"تسوق",fun:"ترفيه",health:"صحة",other:"أخرى"},loc:"ar-EG",dir:"rtl",wk:6},
+en:{title:"My Expenses",month:"Spent this month",today:"Spent today",week:"Spent this week",bDay:"Day",bWeek:"Week",bMonth:"Month",addH:"Add an expense",amount:"Amount",category:"Category",note:"Note (optional)",notePh:"e.g. Lunch",add:"Add expense",budgetL:"The maximum you want to stick to",budgetPh:"Leave empty if none",hDay:"Daily budget",hWeek:"Weekly budget",hMonth:"Monthly budget",byCat:"By category",recent:"Recent expenses",noData:"No data yet",first:"Add your first expense",cDay:"Clear day data",cWeek:"Clear week data",cMonth:"Clear month data",confirm:"Tap again to confirm",left:"Left in your budget: ",over:"Over your budget by ",setB:"Set a budget to track what is left",del:"Delete",profile:"Account",newP:"Add account",namePh:"Name (e.g. Ahmed)",create:"Create",cancel:"Close",delP:"Delete this account",me:"Me",
+cats:{food:"Food",transport:"Transport",bills:"Bills",shopping:"Shopping",fun:"Fun",health:"Health",other:"Other"},loc:"en-US",dir:"ltr",wk:1},
+fr:{title:"Mes dépenses",month:"Dépensé ce mois-ci",today:"Dépensé aujourd’hui",week:"Dépensé cette semaine",bDay:"Jour",bWeek:"Semaine",bMonth:"Mois",addH:"Ajouter une dépense",amount:"Montant",category:"Catégorie",note:"Note (facultatif)",notePh:"ex. Déjeuner",add:"Ajouter la dépense",budgetL:"Le maximum que vous voulez respecter",budgetPh:"Laisser vide si aucun",hDay:"Budget du jour",hWeek:"Budget de la semaine",hMonth:"Budget du mois",byCat:"Par catégorie",recent:"Dépenses récentes",noData:"Aucune donnée pour l’instant",first:"Ajoutez votre première dépense",cDay:"Effacer les données du jour",cWeek:"Effacer les données de la semaine",cMonth:"Effacer les données du mois",confirm:"Appuyez encore pour confirmer",left:"Reste dans votre budget : ",over:"Dépassement du budget de ",setB:"Définissez un budget pour suivre le reste",del:"Supprimer",profile:"Compte",newP:"Ajouter un compte",namePh:"Nom (ex. Ahmed)",create:"Créer",cancel:"Fermer",delP:"Supprimer ce compte",me:"Moi",
+cats:{food:"Alimentation",transport:"Transport",bills:"Factures",shopping:"Achats",fun:"Loisirs",health:"Santé",other:"Autre"},loc:"fr-FR",dir:"ltr",wk:1}
+};
+var LEG={"طعام":"food","مواصلات":"transport","فواتير":"bills","تسوق":"shopping","ترفيه":"fun","صحة":"health","أخرى":"other"};
+var KEYS=["food","transport","bills","shopping","fun","health","other"];
+var lang="ar",period="month";
+try{var sl=localStorage.getItem(LKEY);if(sl&&T[sl])lang=sl;else{var nl=(navigator.language||"ar").slice(0,2);if(T[nl])lang=nl}}catch(e){}
+var $=function(i){return document.getElementById(i)};
+function t(k){return T[lang][k]}
+function ck(c){return LEG[c]||c}
+function cname(c){var k=ck(c);return T[lang].cats[k]||c}
+function f(x){return (Math.round(x*100)/100).toLocaleString(T[lang].loc,{maximumFractionDigits:2})}
+function esc(x){var d=document.createElement("div");d.textContent=x;return d.innerHTML}
+function monthKey(ts){var d=new Date(ts);return d.getFullYear()+"-"+d.getMonth()}
+function startOfDay(ts){var d=new Date(ts);d.setHours(0,0,0,0);return d.getTime()}
+function startOfWeek(ts){var d=new Date(startOfDay(ts));var diff=(d.getDay()-T[lang].wk+7)%7;d.setDate(d.getDate()-diff);return d.getTime()}
+function pname(p){return p.name||t("me")}
+function renderProfiles(){
+$("prof").innerHTML=data.profiles.map(function(p){return '<option value="'+p.id+'">'+esc(pname(p))+'</option>'}).join("");
+$("prof").value=data.active;$("prof").hidden=data.profiles.length<2;$("newP").textContent=data.profiles.length>1?pname(cp())+" ▾":t("newP");
+var d=$("delP");d.hidden=data.profiles.length<2;d.removeAttribute("data-sure");d.textContent=t("delP");
+}
+function setClear(){var c=$("clear");c.removeAttribute("data-sure");c.textContent=t(period==="day"?"cDay":period==="week"?"cWeek":"cMonth")}
+function syncBudget(){
+$("budgetH").textContent=t(period==="day"?"hDay":period==="week"?"hWeek":"hMonth");
+$("budget").value=cp().budgets[period]||"";
+setClear();
+}
+function applyLang(){
+var L=T[lang];
+document.documentElement.lang=lang;document.documentElement.dir=L.dir;
+document.title=L.title;
+Array.prototype.forEach.call(document.querySelectorAll("[data-i]"),function(e){e.textContent=L[e.getAttribute("data-i")]});
+$("note").placeholder=L.notePh;$("budget").placeholder=L.budgetPh;$("pname").placeholder=L.namePh;
+var sel=$("cat"),prev=sel.value;
+sel.innerHTML=KEYS.map(function(k){return '<option value="'+k+'">'+esc(L.cats[k])+'</option>'}).join("");
+if(prev&&KEYS.indexOf(prev)>-1)sel.value=prev;
+$("lang").value=lang;
+renderProfiles();syncBudget();
+}
+function render(){
+var p=cp(),items=p.items[period];
+var cur=items;
+var tot=cur.reduce(function(a,i){return a+i.a},0);
+$("total").textContent=f(tot);
+$("periodLbl").textContent=t(period==="day"?"today":period==="week"?"week":"month");
+Array.prototype.forEach.call(document.querySelectorAll(".seg button"),function(e){e.setAttribute("aria-pressed",e.getAttribute("data-p")===period?"true":"false")});
+var b=parseFloat(p.budgets[period]);
+if(b>0){
+var left=b-tot;
+$("budgetTxt").textContent=left>=0?t("left")+f(left):t("over")+f(-left);
+$("barWrap").hidden=false;$("bar").style.width=Math.min(100,tot/b*100)+"%";
+}else{$("budgetTxt").textContent=t("setB");$("barWrap").hidden=true}
+var by={};cur.forEach(function(i){var k=ck(i.c);by[k]=(by[k]||0)+i.a});
+var keys=Object.keys(by).sort(function(a,b){return by[b]-by[a]});
+$("cats").innerHTML=keys.length?keys.map(function(k){
+return '<div class="cat"><div class="top"><span>'+esc(T[lang].cats[k]||k)+'</span><span>'+f(by[k])+'</span></div><div class="track"><i style="width:'+(by[k]/tot*100)+'%"></i></div></div>'}).join(""):'<div class="empty">'+esc(t("noData"))+'</div>';
+var recent=items.slice().sort(function(a,b){return b.t-a.t}).slice(0,30);
+$("list").innerHTML=recent.length?recent.map(function(i){
+var dt=new Date(i.t).toLocaleDateString(T[lang].loc,{day:"numeric",month:"short"});
+return '<div class="item"><div class="info"><div>'+esc(i.n||cname(i.c))+'</div><div class="meta">'+esc(cname(i.c))+' · '+dt+'</div></div><span class="amt">'+f(i.a)+'</span><button class="del" data-id="'+i.id+'" aria-label="'+esc(t("del"))+'">×</button></div>'}).join(""):'<div class="empty">'+esc(t("first"))+'</div>';
+}
+$("addBtn").addEventListener("click",function(){
+var a=parseFloat($("amt").value);
+if(!(a>0)){$("amt").focus();return}
+cp().items[period].push({id:Date.now()+Math.random().toString(36).slice(2,6),a:a,c:$("cat").value,n:$("note").value.trim(),t:Date.now()});
+$("amt").value="";$("note").value="";save();render();$("amt").focus();
+});
+$("amt").addEventListener("keydown",function(e){if(e.key==="Enter")$("addBtn").click()});
+$("note").addEventListener("keydown",function(e){if(e.key==="Enter")$("addBtn").click()});
+$("list").addEventListener("click",function(e){
+var id=e.target&&e.target.getAttribute("data-id");if(!id)return;
+var p=cp();p.items[period]=p.items[period].filter(function(i){return i.id!==id});save();render();
+});
+$("budget").addEventListener("input",function(){cp().budgets[period]=this.value;save();render()});
+Array.prototype.forEach.call(document.querySelectorAll(".seg button"),function(e){e.addEventListener("click",function(){period=this.getAttribute("data-p");syncBudget();render()})});
+$("clear").addEventListener("click",function(){
+if(this.getAttribute("data-sure")){var p=cp();p.items[period]=[];p.budgets[period]="";save();syncBudget();render()}
+else{this.textContent=t("confirm");this.setAttribute("data-sure","1")}
+});
+$("lang").addEventListener("change",function(){
+lang=this.value;try{localStorage.setItem(LKEY,lang)}catch(e){}
+applyLang();render();
+});
+$("prof").addEventListener("change",function(){data.active=this.value;save();$("newRow").hidden=true;renderProfiles();syncBudget();render()});
+$("newP").addEventListener("click",function(){var r=$("newRow");r.hidden=!r.hidden;if(!r.hidden){$("pname").value="";if(data.profiles.length<2)$("pname").focus()}});
+$("cancelP").addEventListener("click",function(){$("newRow").hidden=true});
+function createP(){
+var n=$("pname").value.trim();
+if(!n){$("pname").focus();return}
+var id="p"+Date.now();
+data.profiles.push({id:id,name:n,items:normItems(),budgets:newBud()});
+data.active=id;save();$("newRow").hidden=true;renderProfiles();syncBudget();render();
+}
+$("createP").addEventListener("click",createP);
+$("pname").addEventListener("keydown",function(e){if(e.key==="Enter")createP()});
+$("delP").addEventListener("click",function(){
+if(data.profiles.length<2)return;
+if(this.getAttribute("data-sure")){
+data.profiles=data.profiles.filter(function(p){return p.id!==data.active});
+data.active=data.profiles[0].id;save();$("newRow").hidden=true;renderProfiles();syncBudget();render();
+}else{this.textContent=t("confirm");this.setAttribute("data-sure","1")}
+});
+applyLang();render();
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+})();
+</script>
+</body>
+</html>
